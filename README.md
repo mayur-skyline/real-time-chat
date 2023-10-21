@@ -1,4 +1,5 @@
 # real-time-chat
+
 This open-source project is a real-time chat application built with React and Node.js, powered by the popular Socket.io library. It provides a fast and interactive way to engage with your audience or users in real time
 
 ### Setting up
@@ -9,9 +10,9 @@ This open-source project is a real-time chat application built with React and No
    - we recommend using VSCode's built in git tools for this
    - we also recommend that the project is cloned to `C:/dev` (or similar) for ease of access
 3. Open the terminal in VSCode
-   1. Navigate to `/client` and then run `npm install`
-   2. Run `npm run start` to start web app.
-4. Now, create `.env` file within `/server` folder. Check `.env.example` for reference
-   1. Navigate to `/server` folder and then run `npm install`
-   2. Run `npm run start` to start backend server.
-5. Now, you are ready to go.
+   1. Navigate to root of the project
+   2. Run `npm install`
+4. Now, navigate to `packages/client`
+   1. Run `npm run start` to start web application.
+5. Now, navigate to `packages/server`
+   1. Run `npm run start` to start backend server.
