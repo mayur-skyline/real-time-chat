@@ -1,0 +1,34 @@
+const os = require("os");
+const cluster = require("cluster");
+
+const maxWorkers = Number(process.env.NODE_CLUSTER_MAX_WORKERS ?? "1");
+const numCPUs = os.cpus().length;
+const numWorkers = Math.min(maxWorkers, numCPUs);
+
+if (numWorkers === 1) {
+  console.info("Only one worker requested, not using cluster mode");
+}
+
+if (numWorkers > 1 && cluster.isMaster) {
+  console.info(
+    `Requested max workers: ${maxWorkers}, ${numCPUs} available, using ${numWorkers} workers`
+  );
+  console.info(`Primary ${process.pid} is running`);
+
+  for (let i = 0; i < numWorkers; i++) {
+    cluster.fork();
+  }
+
+  cluster.on("exit", (worker, code) => {
+    console.error(`Worker ${worker.process.pid} exited with code ${code}`);
+    console.info("Fork new worker!");
+    cluster.fork();
+  });
+} else {
+  console.info(`Worker ${process.pid} started`);
+
+  const { ExpressServer } = require("./app");
+
+  const app = new ExpressServer();
+  app.start();
+}
