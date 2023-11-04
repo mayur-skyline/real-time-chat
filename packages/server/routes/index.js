@@ -1,8 +1,8 @@
-const { Router } = require("express");
-const { authRouter } = require("./auth");
-const { messageRouter } = require("./messages");
+import { Router } from "express";
+import { authRouter } from "./auth.js";
+import { messageRouter } from "./messages.js";
 
-const v1Router = () => {
+export const v1Router = () => {
   const router = Router();
 
   router.use("/auth", authRouter());
@@ -10,5 +10,3 @@ const v1Router = () => {
 
   return router;
 };
-
-module.exports = { v1Router };

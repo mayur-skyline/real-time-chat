@@ -1,5 +1,5 @@
-const socket = require("socket.io");
-const { handleAddUser, handleSendMessage } = require("./socketHandlers");
+import socket from "socket.io";
+import { handleAddUser, handleSendMessage } from "./socketHandlers.js";
 
 function socketConnection(server) {
   const io = socket(server, {
@@ -23,4 +23,4 @@ function socketConnection(server) {
   });
 }
 
-module.exports = { socketConnection };
+export { socketConnection };

@@ -1,12 +1,13 @@
-const Express = require("express");
-const cors = require("cors");
-const http = require("http");
-const mongoose = require("mongoose");
-require("dotenv").config();
+import Express from "express";
+import cors from "cors";
+import http from "http";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const { v1Router } = require("./routes");
-const { socketConnection } = require("./sockets");
+import { v1Router } from "./routes/index.js";
+// import { socketConnection } from "./sockets";
 
+dotenv.config();
 class ExpressServer {
   routes() {
     return {
@@ -41,7 +42,7 @@ class ExpressServer {
     };
 
     const server = http.createServer(app).listen(port, onReady);
-    socketConnection(server);
+    // socketConnection(server);
 
     // database connection
     mongoose
@@ -58,4 +59,4 @@ class ExpressServer {
   }
 }
 
-module.exports = { ExpressServer };
+export { ExpressServer };

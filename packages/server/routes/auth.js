@@ -1,11 +1,11 @@
-const { Router } = require("express");
-const {
+import { Router } from "express";
+import {
   login,
   register,
   getAllUsers,
   setAvatar,
   logOut,
-} = require("../controllers/userController");
+} from "../controllers/userController.js";
 
 const authRouter = () => {
   const router = Router();
@@ -19,4 +19,4 @@ const authRouter = () => {
   return router;
 };
 
-module.exports = { authRouter };
+export { authRouter };

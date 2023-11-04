@@ -1,5 +1,7 @@
-const os = require("os");
-const cluster = require("cluster");
+import os from "os";
+import cluster from "cluster";
+
+import { ExpressServer } from "./app.js";
 
 const maxWorkers = Number(process.env.NODE_CLUSTER_MAX_WORKERS ?? "1");
 const numCPUs = os.cpus().length;
@@ -26,8 +28,6 @@ if (numWorkers > 1 && cluster.isMaster) {
   });
 } else {
   console.info(`Worker ${process.pid} started`);
-
-  const { ExpressServer } = require("./app");
 
   const app = new ExpressServer();
   app.start();

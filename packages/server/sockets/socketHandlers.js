@@ -11,7 +11,4 @@ function handleSendMessage(socket, data) {
   }
 }
 
-module.exports = {
-  handleAddUser,
-  handleSendMessage,
-};
+export { handleAddUser, handleSendMessage };

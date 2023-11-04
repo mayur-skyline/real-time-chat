@@ -1,6 +1,6 @@
-const { addMessage, getMessages } = require("../controllers/messageController");
+import { addMessage, getMessages } from "../controllers/messageController.js";
 
-const { Router } = require("express");
+import { Router } from "express";
 
 const messageRouter = () => {
   const router = Router();
@@ -11,4 +11,4 @@ const messageRouter = () => {
   return router;
 };
 
-module.exports = { messageRouter };
+export { messageRouter };
