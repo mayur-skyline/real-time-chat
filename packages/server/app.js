@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 
 import { v1Router } from "./routes/index.js";
-// import { socketConnection } from "./sockets";
+import { socketConnection } from "./sockets/index.js";
 
 dotenv.config();
 class ExpressServer {
@@ -42,7 +42,7 @@ class ExpressServer {
     };
 
     const server = http.createServer(app).listen(port, onReady);
-    // socketConnection(server);
+    socketConnection(server);
 
     // database connection
     mongoose

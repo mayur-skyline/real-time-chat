@@ -1,8 +1,8 @@
-import socket from "socket.io";
+import { Server } from "socket.io";
 import { handleAddUser, handleSendMessage } from "./socketHandlers.js";
 
 function socketConnection(server) {
-  const io = socket(server, {
+  const io = new Server(server, {
     cors: {
       origin: process.env.CORS_ORIGIN,
       credentials: true,
