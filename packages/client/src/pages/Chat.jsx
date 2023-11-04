@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import axios from "axios";
+import Axios from "../request/axios";
 import { useNavigate } from "react-router-dom";
 import { io } from "socket.io-client";
 import styled from "styled-components";
-import { allUsersRoute, host } from "../utils/APIRoutes";
+import { allUsersRoute } from "../utils/APIRoutes";
 import ChatContainer from "../components/ChatContainer";
 import Contacts from "../components/Contacts";
 import Welcome from "../components/Welcome";
@@ -36,26 +36,28 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(undefined);
   const [currentUser, setCurrentUser] = useState(undefined);
 
-  useEffect(() => {
-    if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
-      navigate("/login");
-    } else {
-      setCurrentUser(
-        JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
-      );
-    }
-  }, [navigate]);
+  // useEffect(() => {
+  //   if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
+  //     navigate("/login");
+  //   } else {
+  //     setCurrentUser(
+  //       JSON.parse(localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
+  //     );
+  //   }
+  // }, [navigate]);
 
   useEffect(() => {
     if (currentUser) {
-      socket.current = io(host);
+      socket.current = io(process.env.REACT_APP_API_HOST);
       socket.current.emit("add-user", currentUser._id);
     }
   }, [currentUser]);
 
   const fetchData = useCallback(async (id) => {
-    const data = await axios.get(`${allUsersRoute}/${id}`);
-    setContacts(data.data);
+    const data = await Axios.get(`${allUsersRoute}/${id}`);
+    if (data.data) {
+      setContacts(data.data);
+    }
   }, []);
 
   useEffect(() => {

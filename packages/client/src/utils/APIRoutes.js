@@ -1,8 +1,7 @@
-export const host = process.env.REACT_APP_API_HOST;
-export const loginRoute = `${host}/api/auth/login`;
-export const registerRoute = `${host}/api/auth/register`;
-export const logoutRoute = `${host}/api/auth/logout`;
-export const allUsersRoute = `${host}/api/auth/allusers`;
-export const sendMessageRoute = `${host}/api/messages/addmsg`;
-export const receiveMessageRoute = `${host}/api/messages/getmsg`;
-export const setAvatarRoute = `${host}/api/auth/setavatar`;
+export const loginRoute = `/api/auth/login`;
+export const registerRoute = `/api/auth/register`;
+export const logoutRoute = `/api/auth/logout`;
+export const allUsersRoute = `/api/auth/allusers`;
+export const sendMessageRoute = `/api/messages/addmsg`;
+export const receiveMessageRoute = `/api/messages/getmsg`;
+export const setAvatarRoute = `/api/auth/setavatar`;

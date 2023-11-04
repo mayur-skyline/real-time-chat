@@ -1,93 +1,19 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-// import Logo from "../assets/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Link } from "react-router-dom";
+
 import { loginRoute } from "../utils/APIRoutes";
+import { useAuth } from "../context/AuthProvider";
 
-export default function Login() {
-  const navigate = useNavigate();
-  const [values, setValues] = useState({ username: "", password: "" });
-  const toastOptions = {
-    position: "bottom-right",
-    autoClose: 8000,
-    pauseOnHover: true,
-    draggable: true,
-    theme: "dark",
-  };
-  useEffect(() => {
-    if (localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)) {
-      navigate("/");
-    }
-  }, [navigate]);
-
-  const handleChange = (event) => {
-    setValues({ ...values, [event.target.name]: event.target.value });
-  };
-
-  const validateForm = () => {
-    const { username, password } = values;
-    if (username === "") {
-      toast.error("Email and Password is required.", toastOptions);
-      return false;
-    } else if (password === "") {
-      toast.error("Email and Password is required.", toastOptions);
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (validateForm()) {
-      const { username, password } = values;
-      const { data } = await axios.post(loginRoute, {
-        username,
-        password,
-      });
-      if (data.status === false) {
-        toast.error(data.msg, toastOptions);
-      }
-      if (data.status === true) {
-        localStorage.setItem(
-          process.env.REACT_APP_LOCALHOST_KEY,
-          JSON.stringify(data.user)
-        );
-
-        navigate("/");
-      }
-    }
-  };
-
-  return (
-    <>
-      <FormContainer>
-        <form action="" onSubmit={(event) => handleSubmit(event)}>
-          <input
-            type="text"
-            placeholder="Username"
-            name="username"
-            onChange={(e) => handleChange(e)}
-            min="3"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            onChange={(e) => handleChange(e)}
-          />
-          <button type="submit">Log In</button>
-          {/* <span>
-            Don't have an account ? <Link to="/register">Create One.</Link>
-          </span> */}
-        </form>
-      </FormContainer>
-      <ToastContainer />
-    </>
-  );
-}
+const toastOptions = {
+  position: "bottom-right",
+  autoClose: 8000,
+  pauseOnHover: true,
+  draggable: true,
+  theme: "dark",
+};
 
 const FormContainer = styled.div`
   height: 100vh;
@@ -157,3 +83,82 @@ const FormContainer = styled.div`
     }
   }
 `;
+
+export default function Login() {
+  const { setToken } = useAuth();
+
+  const [values, setValues] = useState({ username: "", password: "" });
+
+  const handleChange = (event) => {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  };
+
+  const validateForm = () => {
+    const { username, password } = values;
+    if (!username || !password) {
+      toast.error("Email and Password is required.", toastOptions);
+      return false;
+    }
+
+    return true;
+  };
+
+  const doLogin = async (username, password) => {
+    // uncomment this code when backend is ready
+    // const { data } = await axios.post(loginRoute, {
+    //   username,
+    //   password,
+    // });
+
+    // if (data.status === false) {
+    //   toast.error(data.msg, toastOptions);
+    // }
+
+    // if (data.status === true) {
+    //   const { token } = data;
+    //   localStorage.setItem(process.env.REACT_APP_LOCALHOST_KEY, token);
+
+    //   setToken("Hello");
+    // }
+
+    // remove this line after backend is ready to generate token
+    setToken("Hello");
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const isValid = validateForm();
+
+    if (isValid) {
+      const { username, password } = values;
+      await doLogin(username, password);
+    }
+  };
+
+  return (
+    <>
+      <FormContainer>
+        <form onSubmit={(event) => handleSubmit(event)}>
+          <input
+            type="text"
+            placeholder="Username"
+            name="username"
+            onChange={(e) => handleChange(e)}
+            min="3"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            name="password"
+            onChange={(e) => handleChange(e)}
+          />
+          <button type="submit">Log In</button>
+          <span>
+            Don't have an account ? <Link to="/register">Create One.</Link>
+          </span>
+        </form>
+      </FormContainer>
+      <ToastContainer />
+    </>
+  );
+}
