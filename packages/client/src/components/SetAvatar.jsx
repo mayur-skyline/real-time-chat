@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { Buffer } from "buffer";
@@ -7,6 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../utils/APIRoutes";
+
 export default function SetAvatar() {
   const api = `https://api.multiavatar.com/4645646`;
   const navigate = useNavigate();
@@ -21,10 +22,10 @@ export default function SetAvatar() {
     theme: "dark",
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     if (!localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY))
       navigate("/login");
-  }, []);
+  }, [navigate]);
 
   const setProfilePicture = async () => {
     if (selectedAvatar === undefined) {
@@ -52,7 +53,7 @@ export default function SetAvatar() {
     }
   };
 
-  useEffect(async () => {
+  const getAvatars = useCallback(async () => {
     const data = [];
     for (let i = 0; i < 4; i++) {
       const image = await axios.get(
@@ -63,7 +64,12 @@ export default function SetAvatar() {
     }
     setAvatars(data);
     setIsLoading(false);
-  }, []);
+  }, [api]);
+
+  useEffect(() => {
+    getAvatars();
+  }, [getAvatars]);
+
   return (
     <>
       {isLoading ? (
@@ -80,8 +86,9 @@ export default function SetAvatar() {
             {avatars.map((avatar, index) => {
               return (
                 <div
-                  className={`avatar ${selectedAvatar === index ? "selected" : ""
-                    }`}
+                  className={`avatar ${
+                    selectedAvatar === index ? "selected" : ""
+                  }`}
                 >
                   <img
                     src={`data:image/svg+xml;base64,${avatar}`}

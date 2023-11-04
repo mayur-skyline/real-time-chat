@@ -6,13 +6,14 @@ export default function Contacts({ contacts, changeChat }) {
   const [currentUserName, setCurrentUserName] = useState(undefined);
   const [currentUserImage, setCurrentUserImage] = useState(undefined);
   const [currentSelected, setCurrentSelected] = useState(undefined);
-  useEffect(async () => {
-    const data = await JSON.parse(
+  useEffect(() => {
+    const data = JSON.parse(
       localStorage.getItem(process.env.REACT_APP_LOCALHOST_KEY)
     );
     setCurrentUserName(data?.username);
     setCurrentUserImage(data?.avatarImage);
   }, []);
+
   const changeCurrentChat = (index, contact) => {
     setCurrentSelected(index);
     changeChat(contact);
@@ -30,8 +31,9 @@ export default function Contacts({ contacts, changeChat }) {
               return (
                 <div
                   key={contact._id}
-                  className={`contact ${index === currentSelected ? "selected" : ""
-                    }`}
+                  className={`contact ${
+                    index === currentSelected ? "selected" : ""
+                  }`}
                   onClick={() => changeCurrentChat(index, contact)}
                 >
                   <div className="avatar">
