@@ -1,10 +1,11 @@
 import { Server } from "socket.io";
 import { handleAddUser, handleSendMessage } from "./socketHandlers.js";
+import { getEnvVariable } from "../utils/env.js";
 
 function socketConnection(server) {
   const io = new Server(server, {
     cors: {
-      origin: process.env.CORS_ORIGIN,
+      origin: getEnvVariable("CORS_ORIGIN"),
       credentials: true,
     },
   });

@@ -2,12 +2,11 @@ import Express from "express";
 import cors from "cors";
 import http from "http";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 
 import { v1Router } from "./routes/index.js";
 import { socketConnection } from "./sockets/index.js";
+import { getEnvVariable } from "./utils/env.js";
 
-dotenv.config();
 class ExpressServer {
   routes() {
     return {
@@ -36,7 +35,7 @@ class ExpressServer {
   async start() {
     const app = await this.bootstrap(this.routes());
 
-    const port = process.env.PORT;
+    const port = getEnvVariable("PORT", 3000);
     const onReady = () => {
       console.info(`Server listening on port ${port}`);
     };
@@ -46,7 +45,7 @@ class ExpressServer {
 
     // database connection
     mongoose
-      .connect(process.env.MONGO_URL, {
+      .connect(getEnvVariable("MONGO_URL"), {
         useNewUrlParser: true,
         useUnifiedTopology: true,
       })

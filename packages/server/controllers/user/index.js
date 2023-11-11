@@ -1,5 +1,29 @@
 import bcrypt from "bcrypt";
 import User from "../../models/userModel.js";
+import { tokenService } from "../../utils/token.js";
+
+// Store refresh tokens (in-memory storage, replace with a more robust solution in production)
+const refreshTokens = [];
+
+const getToken = async (req, res) => {
+  const refreshToken = req.body.refreshToken;
+
+  if (!refreshToken || !refreshTokens.includes(refreshToken)) {
+    return res.status(403).json({ error: "Forbidden - Invalid refresh token" });
+  }
+
+  // Check if the refresh token is valid
+  try {
+    const user = await tokenService.verifyRefreshToken(refreshToken);
+
+    // If valid, generate a new access token
+    const accessToken = tokenService.createAccessToken(user);
+
+    res.json({ accessToken });
+  } catch (err) {
+    return res.status(403).json({ error: "Forbidden - Invalid refresh token" });
+  }
+};
 
 const login = async (req, res, next) => {
   try {
@@ -11,7 +35,11 @@ const login = async (req, res, next) => {
     if (!isPasswordValid)
       return res.json({ msg: "Incorrect Username or Password", status: false });
     delete user.password;
-    return res.json({ status: true, user });
+
+    const accessToken = tokenService.createAccessToken(user);
+    const refreshToken = tokenService.createRefreshToken(user);
+
+    return res.json({ status: true, accessToken, refreshToken });
   } catch (ex) {
     next(ex);
   }
@@ -84,4 +112,4 @@ const logOut = (req, res, next) => {
   }
 };
 
-export { login, register, getAllUsers, setAvatar, logOut };
+export { getToken, login, register, getAllUsers, setAvatar, logOut };

@@ -2,8 +2,9 @@ import os from "os";
 import cluster from "cluster";
 
 import { ExpressServer } from "./app.js";
+import { getEnvVariable } from "./utils/env.js";
 
-const maxWorkers = Number(process.env.NODE_CLUSTER_MAX_WORKERS ?? "1");
+const maxWorkers = Number(getEnvVariable("NODE_CLUSTER_MAX_WORKERS", 1));
 const numCPUs = os.cpus().length;
 const numWorkers = Math.min(maxWorkers, numCPUs);
 
@@ -11,7 +12,7 @@ if (numWorkers === 1) {
   console.info("Only one worker requested, not using cluster mode");
 }
 
-if (numWorkers > 1 && cluster.isMaster) {
+if (numWorkers > 1 && cluster.isPrimary) {
   console.info(
     `Requested max workers: ${maxWorkers}, ${numCPUs} available, using ${numWorkers} workers`
   );
